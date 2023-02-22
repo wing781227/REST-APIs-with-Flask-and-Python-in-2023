@@ -32,7 +32,7 @@ def create_store():
     store_data = request.get_json()
     if "name" not in store_data:
         abort(400, message="Bad request. Ensure 'price', 'store_id', and 'name' are included in the JSON payload.")
-    for store in store.values():
+    for store in stores.values():
         if (store_data["name"] == store["name"]):
             abort(400, message=f"Item already exists.")
     
@@ -91,6 +91,32 @@ def create_item():
 
     return item, 201
 
+
+#
+@app.delete("/item/<string:item_id>")
+def delete_item(item_id):
+    try:
+        del items[item_id]
+        return {"message": "Item deleted."}
+    except KeyError:
+        abort(404, message="Item not found.")
+
+
+#
+@app.put("/item/<string:item_id>")
+def update_item(item_id):
+    item_data = request.get_json()
+    if "price" not in item_data or "name" not in item_data:
+        abort(400, message="Bad request. Ensure 'price', 'store_id', and 'name' are included in the JSON payload.")
+
+    try:
+        item = items[item_id]
+        item |= item_data
+
+        return item
+    except KeyError:
+        abort(404, message="Item not found.")
+        
 # 
 @app.get("/item")
 def get_all_items():
