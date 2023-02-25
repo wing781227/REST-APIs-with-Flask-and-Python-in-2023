@@ -1,17 +1,35 @@
-import uuid
-from flask import Flask, request
-from flask_smorest import abort
-from db import items, stores
+# import uuid
+from flask import Flask#, request
+# from flask_smorest import abort
+# from db import items, stores
+
+from flask_smorest import Api
+
+from resources.item import blp as ItemBlueprint
+from resources.store import blp as StoreBlueprint
 
 app = Flask(__name__)
 
+app.config["PROPAGATE_EXCEPTO+IONS"] = True
+app.config["API_TITLE"] = "Stores REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
+api = Api(app)
+
+api.register_blueprint(ItemBlueprint)
+api.register_blueprint(StoreBlueprint)
 
 # @app.get("/store")
 # def get_stores():
 #     return {"stores": stores}
+'''
 @app.get("/store") # http://127.00:500/store
 def get_stores():
-    return {"stores": list(stores.values())}
+    return {"stores": list(stores.values())}'''
 
 # @app.post("/store")
 # def create_store():
@@ -27,7 +45,7 @@ def get_stores():
 #     store = {**store_data, "id": store_id}
 #     stores[store_id] = store
 #     return store, 201
-@app.post("/store")
+'''@app.post("/store")
 def create_store():
     store_data = request.get_json()
     if "name" not in store_data:
@@ -39,7 +57,7 @@ def create_store():
     store_id = uuid.uuid4().hex
     store = {**store_data, "id": store_id}
     stores[store_id] = store
-    return store, 201
+    return store, 201'''
 
 # @app.post("/store/<string:name>/item")
 # def create_item(name):
@@ -64,7 +82,7 @@ def create_store():
 
 #     return item, 201
 
-@app.post("/item")
+'''@app.post("/item")
 def create_item():
     item_data = request.get_json()
     # Here not only we need to validate data exists,
@@ -76,7 +94,7 @@ def create_item():
         or "name" not in item_data
     ):
         abort(400, message="Bad request. Ensure 'price', 'store_id', and 'name' are included in the JSON payload.")
-    for item in item.values():
+    for item in items.values():
         if (
             item_data["name"] == item["name"]
             and item_data["store_id"] == item["store_id"]
@@ -89,9 +107,10 @@ def create_item():
     item = {**item_data, "id": item_id}
     items[item_id] = item
 
-    return item, 201
+    return item, 201'''
 
 
+'''
 #
 @app.delete("/item/<string:item_id>")
 def delete_item(item_id):
@@ -99,9 +118,9 @@ def delete_item(item_id):
         del items[item_id]
         return {"message": "Item deleted."}
     except KeyError:
-        abort(404, message="Item not found.")
+        abort(404, message="Item not found.")'''
 
-
+'''
 #
 @app.put("/item/<string:item_id>")
 def update_item(item_id):
@@ -115,14 +134,16 @@ def update_item(item_id):
 
         return item
     except KeyError:
-        abort(404, message="Item not found.")
-        
+        abort(404, message="Item not found.")'''
+
+''' 
 # 
 @app.get("/item")
 def get_all_items():
-    return {"items": list(items.values())}
+    # return "Hello, world! 123"
+    return {"items": list(items.values())}'''
 
-
+'''
 # @app.get("/store/<string:name>")
 # def get_store(name):
 #     for store in stores:
@@ -135,9 +156,9 @@ def get_store(store_id):
         return stores[store_id]
     except KeyError:
         # return {"message": "Store not found"}, 404
-        abort(404, message="Store not found.")
+        abort(404, message="Store not found.")'''
 
-
+'''
 # @app.get("/store/<string:name>/item")
 # def get_item_in_store(name):
 #     for store in stores:
@@ -150,4 +171,4 @@ def get_item_in_store(item_id):
         return items[item_id]
     except KeyError:
         # return {"message": "Item not found"}, 404
-        abort(404, message="Item not found.")
+        abort(404, message="Item not found."'''
